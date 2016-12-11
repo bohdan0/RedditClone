@@ -16,7 +16,8 @@ class SubsController < ApplicationController
 
   def create
     @sub = Sub.new(sub_params)
-    @sub.moderator_id = current_user.id
+    @sub.moderator = current_user
+
     if @sub.save
       redirect_to sub_url(@sub)
     else
@@ -54,6 +55,7 @@ class SubsController < ApplicationController
 
   def is_moderator
     @sub = Sub.find(params[:id])
+    
     unless @sub.moderator == current_user
       flash[:errors] = ["Not permitted"]
       redirect_to sub_url(@sub)

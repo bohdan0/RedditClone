@@ -15,7 +15,8 @@ class PostsController < ApplicationController
   def create
     @subs = Sub.all
     @post = Post.new(post_params)
-    @post.author_id = current_user.id
+    @post.author = current_user
+
     if @post.save!
       redirect_to post_url(@post)
     else
@@ -42,18 +43,21 @@ class PostsController < ApplicationController
   def destroy
     @post = Post.find(params[:id])
     @post.destroy
+
     redirect_to root_url
   end
 
   def upvote
     @post = Post.find(params[:id])
     Vote.create(value: 1, votable_id: @post.id, votable_type: Post)
+
     redirect_to post_url(@post)
   end
 
   def downvote
     @post = Post.find(params[:id])
     Vote.create(value: -1, votable_id: @post.id, votable_type: Post)
+
     redirect_to post_url(@post)
   end
 
